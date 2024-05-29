@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>{% block title %}{% endblock title %}</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Set minimum height to the viewport height */
+    }
+
+    .content {
+      flex: 1; /* Allow content to grow and take remaining space */
+    }
+
+    footer {
+      flex-shrink: 0; /* Prevent footer from shrinking */
+    }
+
+    /* Custom styles for the navigation bar */
+    .navbar {
+      background-color: #417690;
+    }
+
+    .navbar-text {
+      color: #E4DA74;
+    }
+
+    .navbar-button {
+      background-color: #264B5D;
+    }
+
+    .navbar-button:hover {
+      background-color: #1f3d4f; /* Slightly darker shade for hover effect */
+    }
+  </style>
+</head>
+<body>
+  <nav class="py-2 px-6 flex justify-between navbar">
+    <a href="/" class="py-2 text-2xl navbar-text mt-1 mb-1">Star Fabricators Pvt Ltd</a>
+    <div class="flex flex-col items-end justify-center space-y-2">
+        {% if request.user.is_authenticated %}
+            <span class="navbar-text py-0 text-sm">Welcome, {{ request.user.username }}</span> 
+            <div class="flex items-center space-x-4">
+                {% comment %} <a href="{% url 'dashboard' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Dashboard</a>
+                <a href="{% url 'leads_list' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Leads</a> {% endcomment %}
+                <a href="{% url 'main_page' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Home</a>
+                <a href="{% url 'add_raw_material' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Add Raw Material</a>
+                <a href="{% url 'list_raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Raw Materials</a>
+                <a href="{% url 'orders_recieved' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders Recieved</a>
+                <a href="{% url 'my_orders' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Orders</a>
+                <a href="{% url 'my_account' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Account</a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Logout</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="flex">
+                <a href="{% url 'login' %}" class="py-2 px-5 mr-2 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Log In</a>
+                <a href="{% url 'signup' %}" class="py-2 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Sign Up</a>
+            </div>
+        {% endif %}
+    </div>
+  </nav>
+
+  <div class="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <footer class="py-5 text-center bg-gray-800 text-white">
+    <p class="text-base">Copyright (c) 2024 - Star Fabricators - Developed by Mohd Adeeb Contact: mohdadeeb110@gmail.com</p>
+  </footer>
+</body>
+</html>
+
+{% comment %} <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>{% block title %}{% endblock title %}</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Set minimum height to the viewport height */
+    }
+
+    .content {
+      flex: 1; /* Allow content to grow and take remaining space */
+    }
+
+    footer {
+      flex-shrink: 0; /* Prevent footer from shrinking */
+    }
+  </style>
+</head>
+<body>
+  <nav class="py-2 px-6 flex justify-between bg-gray-950">
+    <a href="/" class="py-2 text-2xl text-white mt-1 mb-1">Star Fabricators Pvt Ltd</a>
+    <div class="flex flex-col items-end justify-center space-y-2">
+        {% if request.user.is_authenticated %}
+            <span class="text-white py-0 text-sm">Welcome, {{ request.user.username }}</span> 
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'main_page' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Home</a>
+                <a href="{% url 'add_raw_material' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Add Raw Material</a>
+                <a href="{% url 'list_raw_materials' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">My Raw Materials</a>
+                <a href="{% url 'orders_recieved' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Orders Recieved</a>
+                <a href="{% url 'my_orders' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">My Orders</a>
+                <a href="{% url 'my_account' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">My Account</a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Logout</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="flex">
+                <a href="{% url 'login' %}" class="py-2 px-5 mr-2 bg-gray-800 rounded-xl text-sm text-white hover:bg-gray-700">Log In</a>
+                <a href="{% url 'signup' %}" class="py-2 px-5 bg-gray-800 rounded-xl text-sm text-white hover:bg-gray-700">Sign Up</a>
+            </div>
+        {% endif %}
+    </div>
+  </nav>
+
+  <div class="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <footer class="py-5 text-center bg-gray-800 text-white">
+    <p class="text-base">Copyright (c) 2024 - NexaCapital</p>
+  </footer>
+</body>
+</html> {% endcomment %}

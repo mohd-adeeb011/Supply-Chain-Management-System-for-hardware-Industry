@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+
+{% block title %}Product Catalogue{% endblock title %}
+{% block content %}
+<div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold my-4">Product Catalogue</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for product in products %}
+        <div class="max-w-md overflow-hidden shadow-lg border border-gray-200 rounded-lg">
+            <img class="w-full h-48 object-cover" src="{{ product.image.url }}" alt="{{ product.name }}">
+            <div class="px-6 py-4">
+                <div class="font-bold text-xl mb-2">{{ product.name }}</div>
+                <p class="text-gray-700 text-base">Total items: {{ product.total_items }}</p>
+                <p class="text-gray-700 text-base">Price: {{ product.price }}</p>
+            </div>
+            <div class="px-6 pt-4 pb-2 mb-2">
+                <a href="{% url 'buy_product' product.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Buy Now</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

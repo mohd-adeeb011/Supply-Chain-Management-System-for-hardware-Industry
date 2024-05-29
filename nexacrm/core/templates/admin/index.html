@@ -1,0 +1,122 @@
+{% load i18n %}
+{% extends "admin/index.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+{% if app_list %}
+    <div class="app-list">
+        {% for app in app_list %}
+            {% if app.app_label == 'core' %}
+                <div class="app-section" id="{{ app.app_label }}">
+                    <table class="app-models">
+                        <caption>
+                            <a href="{{ app.app_url }}">{{ app.name }}</a>
+                        </caption>
+                        <tbody>
+                            {% for model in app.models %}
+                                {% if model.object_name == 'RawMaterial' %}
+                                    <tr class="model-rawmaterial">
+                                        <th scope="row">
+                                            <a href="{{ model.admin_url }}">Raw Materials</a>
+                                        </th>
+                                        <td class="action-add">
+                                            {% if model.add_url %}
+                                                <a href="{{ model.add_url }}" title="{% trans 'Add' %}">{{ model.add_url|add_btn }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="action-icons">
+                                            {% for action in model.actions %}
+                                                <a href="{{ action.url }}" title="{{ action.description }}">{{ action.icon }}</a>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if model.object_name == 'ManufacturingPart' %}
+                                    <tr class="model-manufacturingpart">
+                                        <th scope="row">
+                                            <a href="{{ model.admin_url }}">Manufacturing Parts</a>
+                                        </th>
+                                        <td class="action-add">
+                                            {% if model.add_url %}
+                                                <a href="{{ model.add_url }}" title="{% trans 'Add' %}">{{ model.add_url|add_btn }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="action-icons">
+                                            {% for action in model.actions %}
+                                                <a href="{{ action.url }}" title="{{ action.description }}">{{ action.icon }}</a>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if model.object_name == 'Product' %}
+                                    <tr class="model-product">
+                                        <th scope="row">
+                                            <a href="{{ model.admin_url }}">Products</a>
+                                        </th>
+                                        <td class="action-add">
+                                            {% if model.add_url %}
+                                                <a href="{{ model.add_url }}" title="{% trans 'Add' %}">{{ model.add_url|add_btn }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="action-icons">
+                                            {% for action in model.actions %}
+                                                <a href="{{ action.url }}" title="{{ action.description }}">{{ action.icon }}</a>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if model.object_name == 'PurchasedProduct' %}
+                                    <tr class="model-purchasedproduct">
+                                        <th scope="row">
+                                            <a href="{{ model.admin_url }}">Purchased Products</a>
+                                        </th>
+                                        <td class="action-add">
+                                            {% if model.add_url %}
+                                                <a href="{{ model.add_url }}" title="{% trans 'Add' %}">{{ model.add_url|add_btn }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="action-icons">
+                                            {% for action in model.actions %}
+                                                <a href="{{ action.url }}" title="{{ action.description }}">{{ action.icon }}</a>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="app-section" id="{{ app.app_label }}">
+                    <table class="app-models">
+                        <caption>
+                            <a href="{{ app.app_url }}">{{ app.name }}</a>
+                        </caption>
+                        <tbody>
+                            {% for model in app.models %}
+                                <tr class="model-{{ model.object_name|lower }}">
+                                    <th scope="row">
+                                        <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                                    </th>
+                                    <td class="action-add">
+                                        {% if model.add_url %}
+                                            <a href="{{ model.add_url }}" title="{% trans 'Add' %}">{{ model.add_url|add_btn }}</a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="action-icons">
+                                        {% for action in model.actions %}
+                                            <a href="{{ action.url }}" title="{{ action.description }}">{{ action.icon }}</a>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p>{% trans 'You have no apps to display.' %}</p>
+{% endif %}
+{% endblock %}
