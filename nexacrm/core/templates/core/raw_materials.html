@@ -1,0 +1,27 @@
+{% extends "core/base.html" %}
+
+{% block title %}Raw Materials{% endblock %}
+
+{% block content %}
+<h2>Raw Materials</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>User</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for raw_material in raw_materials %}
+        <tr>
+            <td>{{ raw_material.name }}</td>
+            <td>{{ raw_material.user }}</td>
+            <td>{{ raw_material.quantity }}</td>
+            <td>{{raw_material.price}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

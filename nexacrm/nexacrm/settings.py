@@ -37,8 +37,7 @@ MEDIA_URL = '/products/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '')
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
-CRISPY_TEMPLATE_PACK = "tailwind"
-
+CRISPY_TEMPLATE_PACK = "tailwind"   
 
 INSTALLED_APPS = [
     'django.contrib.admin',

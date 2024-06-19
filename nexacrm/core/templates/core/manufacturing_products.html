@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+
+{% block title %}Manufacturing Products{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto mt-10">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Manufacturing Products</h2>
+        {% if user.is_superuser %}
+            <a href="{% url 'add_manufacturing_product' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Manufacturing Product</a>
+        {% endif %}
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for product in manufacturing_products %}
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-xl font-bold mb-2">{{ product.name }}</h3>
+            <div class="space-y-2">
+                <div>
+                    <span class="font-semibold">Raw Material 1:</span> {{ product.raw_material_1 }} - <span class="font-semibold">Quantity:</span> {{ product.quantity_1 }}
+                </div>
+                <div>
+                    <span class="font-semibold">Raw Material 2:</span> {{ product.raw_material_2 }} - <span class="font-semibold">Quantity:</span> {{ product.quantity_2 }}
+                </div>
+                <div>
+                    <span class="font-semibold">Raw Material 3:</span> {{ product.raw_material_3 }} - <span class="font-semibold">Quantity:</span> {{ product.quantity_3 }}
+                </div>
+                <div>
+                    <span class="font-semibold">Raw Material 4:</span> {{ product.raw_material_4 }} - <span class="font-semibold">Quantity:</span> {{ product.quantity_4 }}
+                </div>
+                <div>
+                    <span class="font-semibold">Raw Material 5:</span> {{ product.raw_material_5 }} - <span class="font-semibold">Quantity:</span> {{ product.quantity_5 }}
+                </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <a href="{% url 'edit_manufacturing_product' product.pk %}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Edit</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

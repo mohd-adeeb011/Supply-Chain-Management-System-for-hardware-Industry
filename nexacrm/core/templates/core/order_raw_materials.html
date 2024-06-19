@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Order Raw Materials{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto mt-10 bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold mb-6">Order Raw Materials</h2>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="flex justify-end">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check Raw Materials</button>
+        </div>
+    </form>
+
+    {% if materials_info %}
+        <h3 class="text-xl font-bold mt-10">Raw Materials Information</h3>
+        <div class="mt-6">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Raw Material</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity Needed</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity Available</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity to Order</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for material in materials_info %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_needed }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_available }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_to_order }}</td>
+                        <td>
+                            <form method="post" action="{% url 'finalize_order'%}">
+                                {% csrf_token %}
+                                <input type="hidden" name="material_id" value="{{ material.id }}">
+                                <input type="hidden" name="quantity_to_order" value="{{ material.quantity_to_order }}">
+                                <button type="submit" class="inline justify-center py-2 px-3 bg-gray-500 rounded-xl text-white text-sm hover:bg-gray-700">Order</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}    
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

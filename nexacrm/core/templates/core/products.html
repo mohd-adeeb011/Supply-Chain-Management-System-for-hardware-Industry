@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h2>Products</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Manufacturing Parts</th>
+            <th>Total Items</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.get_manufacturing_parts }}</td>
+            <td>{{ product.total_items }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

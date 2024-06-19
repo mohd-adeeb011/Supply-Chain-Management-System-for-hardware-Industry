@@ -73,3 +73,28 @@ class Order(models.Model):
         raw_material = self.raw_material
         raw_material.quantity -= self.quantity
         raw_material.save()
+
+class BillOfMaterials(models.Model):
+    name = models.CharField(max_length=255)
+    raw_material = models.ForeignKey(RawMaterial, on_delete=models.CASCADE)
+    required_quantity = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.product.name} - {self.raw_material.name}'
+
+
+class ManufacturingProduct(models.Model):
+    name = models.CharField(max_length=255)
+    raw_material_1 = models.CharField(max_length=255, null=True, blank=True)
+    quantity_1 = models.IntegerField(null=True, blank=True)
+    raw_material_2 = models.CharField(max_length=255, null=True, blank=True)
+    quantity_2 = models.IntegerField(null=True, blank=True)
+    raw_material_3 = models.CharField(max_length=255, null=True, blank=True)
+    quantity_3 = models.IntegerField(null=True, blank=True)
+    raw_material_4 = models.CharField(max_length=255, null=True, blank=True)
+    quantity_4 = models.IntegerField(null=True, blank=True)
+    raw_material_5 = models.CharField(max_length=255, null=True, blank=True)
+    quantity_5 = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name

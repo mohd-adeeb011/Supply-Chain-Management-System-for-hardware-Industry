@@ -46,14 +46,22 @@
         {% if request.user.is_authenticated %}
             <span class="navbar-text py-0 text-sm">Welcome, {{ request.user.username }}</span> 
             <div class="flex items-center space-x-4">
-                {% comment %} <a href="{% url 'dashboard' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Dashboard</a>
-                <a href="{% url 'leads_list' %}" class="py-1 px-5 bg-gray-500 rounded-xl text-sm text-white hover:bg-gray-700">Leads</a> {% endcomment %}
+              {% if request.user.is_superuser %}
+              <a href="{% url 'main_page' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Home</a>
+                <a href="{% url 'manufacturing_products' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Add Manufacturing Product</a>
+                <a href="{% url 'raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Raw Materials by Vendors</a>
+                <a href="{% url 'manufacturing_parts' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Manufacturing Parts</a>
+                <a href="{% url 'orders' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders</a>
+                <a href="{% url 'order_raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders Raw Materials</a>
+                <a href="{% url 'products' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Products</a>
+                {% else %}
                 <a href="{% url 'main_page' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Home</a>
                 <a href="{% url 'add_raw_material' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Add Raw Material</a>
                 <a href="{% url 'list_raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Raw Materials</a>
                 <a href="{% url 'orders_recieved' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders Recieved</a>
                 <a href="{% url 'my_orders' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Orders</a>
                 <a href="{% url 'my_account' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Account</a>
+              {% endif %}
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Logout</button>
