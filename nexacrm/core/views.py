@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
-from .models import Product, PurchasedProduct, RawMaterial, ManufacturingPart, Product, Order, ManufacturingProduct
+from .models import Product, PurchasedProduct, RawMaterial, ManufacturingPart, Product, Order, ManufacturingProduct, CartItem
 from userprofile.models import Userprofile  # Correct import
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import UserProfileForm, ManufacturingProductForm, PurchaseForm, RawMaterialForm, RawMaterialOrderForm
+from .forms import UserProfileForm, ManufacturingProductForm, PurchaseForm, RawMaterialForm, RawMaterialOrderForm, CartItemForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Sum
 from django.urls import reverse_lazy
 from urllib.parse import urlencode
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 def index(request):
     return render(request, 'core/main_page.html')  # This line is not used anymore but ensure it points correctly
@@ -95,7 +97,10 @@ def my_orders(request):
     orders = PurchasedProduct.objects.filter(user=request.user)
     return render(request, 'core/my_orders.html', {'orders': orders})
 
-
+##==========================================================================================================##
+##==========================================================================================================##
+##==========================================================================================================##
+##==========================================================================================================##
 ## Admin panel
 # Decorator to restrict access to superusers only
 def superuser_required(view_func):
@@ -181,77 +186,62 @@ def order_raw_materials_view(request):
                         'quantity_available': total_available,
                         'quantity_to_order': needed_quantity
                     })
-            ids_to_order = [item['id'] for item in materials_info]
+                    print("----------------------------------------------------################")
+                    print(materials_info[0]['id'])
 
-            url_name = reverse_lazy('finalize_order')
-
-            # Encode the query parameters
-            query_params = urlencode({'ids_to_order': ','.join(map(str, ids_to_order))})
-
-            # Construct the full URL with query parameters
-            full_url = f'{url_name}?{query_params}'
-
-            # Use redirect with the constructed URL
-            return redirect(full_url)
-        else:
-            context = {'form': form}
+            context = {
+                'form': form,
+                'materials_info': materials_info
+            }
             return render(request, 'core/order_raw_materials.html', context)
     else:
         form = RawMaterialOrderForm()
 
     return render(request, 'core/order_raw_materials.html', {'form': form})
 
+# @superuser_required
+# @login_required
+# def add_to_cart(request, raw_material_id):
+#     raw_material = get_object_or_404(RawMaterial, id=raw_material_id)
+    
+#     if request.method == 'POST':
+#         quantity = request.POST.get('quantity')
+#         if quantity:
+#             cart_item, created = CartItem.objects.get_or_create(
+#                 user=request.user,
+#                 raw_material=raw_material,
+#                 defaults={'quantity': quantity}
+#             )
+#             if not created:
+#                 cart_item.quantity += int(quantity)
+#                 cart_item.save()
+#             messages.success(request, 'Item added to cart!')
+#         else:
+#             messages.error(request, 'Quantity is required.')
 
-def finalize_order_view(request, material_id):
-    # Retrieve IDs from the query parameters
-    ids_to_order = request.GET.getlist('ids_to_order')
+#         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+#     else:
+#         form = CartItemForm()
 
-    # Fetch the corresponding items from the database
-    materials_info = []
-    for id in ids_to_order:
-        try:
-            raw_material = RawMaterial.objects.get(pk=id)
-            materials_info.append({
-                'id': raw_material.id,
-                'name': raw_material.name,
-                'quantity_needed': 0,  # Example, adjust according to your logic
-                'quantity_available': 0,  # Example, adjust according to your logic
-                'quantity_to_order': 0  # Example, adjust according to your logic
-            })
-        except ObjectDoesNotExist:
-            pass  # Handle case where ID does not exist
+#     return render(request, 'core/order_raw_materials.html', {'form': form, 'raw_material': raw_material})
+
+@superuser_required
+@login_required
+def add_to_cart_view(request, material_id, quantity):
+    raw_material = get_object_or_404(RawMaterial, id=material_id)
+
     if request.method == 'POST':
-        PrintFunction(2)
-        quantity_to_order = int(request.POST.get('quantity_to_order'))
-        raw_material = get_object_or_404(RawMaterial, pk=material_id)
-
-        # Create a new Order for the required raw material
-        Order.objects.create(
-            user=request.user,
-            raw_material=raw_material,
-            quantity=quantity_to_order,
-            status='complete'
-        )
-        PrintFunction(3)
+        cart_item, created = CartItem.objects.get_or_create(user=request.user, raw_material=raw_material, defaults={'quantity': quantity})
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+        messages.success(request, f"{raw_material.name} has been added to your cart.")
         return redirect('order_raw_materials')
-    else:
-        PrintFunction(4)
-        # Extract the materials_info JSON string from the query parameters
-        materials_info_json = request.GET.get('materials_info', '{}')
-        
-        # Parse the JSON string back into a Python object
-        materials_info = json.loads(materials_info_json)
-        
-        # Assuming you want to access the materials_info in the template or elsewhere
-        # You can now work with materials_info as a list of dictionaries
-        
-        raw_material = get_object_or_404(RawMaterial, pk=material_id)
-        context = {
-            'material': raw_material,
-            'quantity_to_order': request.GET.get('quantity_to_order'),
-            'materials_info': materials_info  # Pass materials_info to the template
-        }
-        return render(request, 'core/finalize_order.html', context)
 
-def PrintFunction(n):
-    print(f"Hello {n}")
+    return redirect('order_raw_materials')
+
+@superuser_required
+@login_required
+def view_cart(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    return render(request, 'core/view_cart.html', {'cart_items': cart_items})

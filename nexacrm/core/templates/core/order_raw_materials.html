@@ -21,6 +21,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Raw Material Id</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Raw Material</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity Needed</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity Available</th>
@@ -31,16 +32,15 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     {% for material in materials_info %}
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ material.name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_needed }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_available }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_to_order }}</td>
-                        <td>
-                            <form method="post" action="{% url 'finalize_order'%}">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <form method="post" action="{% url 'add_to_cart_view' material.id material.quantity_to_order %}">
                                 {% csrf_token %}
-                                <input type="hidden" name="material_id" value="{{ material.id }}">
-                                <input type="hidden" name="quantity_to_order" value="{{ material.quantity_to_order }}">
-                                <button type="submit" class="inline justify-center py-2 px-3 bg-gray-500 rounded-xl text-white text-sm hover:bg-gray-700">Order</button>
+                                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add to Cart</button>
                             </form>
                         </td>
                     </tr>

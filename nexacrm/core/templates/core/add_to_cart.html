@@ -1,0 +1,17 @@
+<!-- core/templates/core/add_to_cart.html -->
+{% extends "core/base.html" %}
+
+{% block title %}Add to Cart{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto mt-10 bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold mb-6">Add {{ raw_material.name }} to Cart</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="flex justify-end">
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add to Cart</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

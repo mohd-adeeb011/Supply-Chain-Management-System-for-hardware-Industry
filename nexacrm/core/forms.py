@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import RawMaterial, Order, ManufacturingPart, Product, PurchasedProduct, Userprofile, ManufacturingProduct
+from .models import RawMaterial, Order, ManufacturingPart, Product, PurchasedProduct, Userprofile, ManufacturingProduct, CartItem
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column
 
@@ -128,3 +128,8 @@ class RawMaterialOrderForm(forms.Form):
                 if raw_material:
                     raw_material_fields.append((raw_material, quantity))
         return raw_material_fields
+    
+class CartItemForm(forms.ModelForm):
+    class Meta:
+        model = CartItem
+        fields = ['raw_material', 'quantity']

@@ -38,6 +38,7 @@ class PurchasedProduct(models.Model):
     price = models.IntegerField(default=3000)
     
 
+##This is the raw material we have.
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -98,3 +99,12 @@ class ManufacturingProduct(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    raw_material = models.ForeignKey(RawMaterial, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.raw_material.name} - {self.quantity}"
