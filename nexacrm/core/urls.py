@@ -23,8 +23,8 @@ urlpatterns = [
     path('edit_manufacturing_product/<int:pk>/', views.edit_manufacturing_product, name='edit_manufacturing_product'),
     path('delete_manufacturing_product/<int:pk>/', views.delete_manufacturing_product, name='delete_manufacturing_product'),
     path('order_raw_materials', views.order_raw_materials_view, name='order_raw_materials'),
-    path('add_to_cart/<int:material_id>/<int:quantity>/', views.add_to_cart_view, name='add_to_cart_view'),
+    path('add_to_cart/<int:raw_material_id>/<int:quantity>/', views.add_to_cart_view, name='add_to_cart_view'),
     path('view_cart/', views.view_cart, name='view_cart'),
+    path('remove_from_cart/<int:cart_item_id>/', views.remove_from_cart_view, name='remove_from_cart'),
     # path('finalize_order/<int:material_id>/', views.finalize_order_view, name='finalize_order'),
-
 ]

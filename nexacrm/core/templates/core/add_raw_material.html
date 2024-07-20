@@ -48,15 +48,3 @@
 </div>
 {% endblock %}
 
-
-{% comment %} {% extends "core/base.html" %}
-
-{% block title %}Add Raw Material{% endblock title %}
-{% block content %}
-<h2>Add Raw Material</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Raw Material</button>
-</form>
-{% endblock %} {% endcomment %}

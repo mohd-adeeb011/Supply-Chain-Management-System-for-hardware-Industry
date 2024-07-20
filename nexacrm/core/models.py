@@ -105,6 +105,8 @@ class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     raw_material = models.ForeignKey(RawMaterial, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+    vendor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items', null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
-        return f"{self.raw_material.name} - {self.quantity}"
+        return f"{self.raw_material.name} - {self.quantity} from {self.raw_material.user.username}"
