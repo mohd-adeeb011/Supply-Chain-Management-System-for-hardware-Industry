@@ -47,7 +47,7 @@
                                     <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add to Cart</button>
                                 </form>
                             {% elif material.status == "Available in Inventory" %}
-                                <button type="button" class="bg-yellow-500 text-white font-bold py-2 px-8 rounded cursor-not-allowed" disabled>In Stock</button>
+                                <button type="button" class="bg-yellow-500 text-white font-bold py-2 px-6 rounded cursor-not-allowed" disabled>In Stock</button>
                             {% elif material.status == "Out of Stock" %}
                                 <button type="button" class="bg-gray-500 text-white font-bold py-2 px-4 rounded cursor-not-allowed" disabled>Out of Stock</button>
                             {% endif %}

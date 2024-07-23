@@ -3,33 +3,44 @@
 {% block title %}Edit Raw Material{% endblock title %}
 
 {% block content %}
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 {% if request.user.is_superuser %} bg-gray-800 text-white {% endif %}">
     <h2 class="text-3xl font-bold my-4">Edit Raw Material</h2>
-    <div class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
-        <form method="post">
+    <div class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 {% if request.user.is_superuser %} bg-gray-900 text-white {% endif %}">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            {{ form.non_field_errors }}
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
                     Name
                 </label>
                 {{ form.name }}
+                {{ form.name.errors }}
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
                     Description
                 </label>
                 {{ form.description }}
+                {{ form.description.errors }}
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="quantity">
                     Quantity
                 </label>
                 {{ form.quantity }}
+                {{ form.quantity.errors }}
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="image">
+                    Image
+                </label>
+                {{ form.image }}
+                {{ form.image.errors }}
             </div>
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Save Changes
             </button>
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-4">
                 <a href="{% url 'list_raw_materials' %}" class="text-blue-500 hover:text-blue-700">
                     Back to List
                 </a>
@@ -38,5 +49,3 @@
     </div>
 </div>
 {% endblock %}
-
-

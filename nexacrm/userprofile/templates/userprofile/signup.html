@@ -1,24 +1,68 @@
 {% extends 'core/base.html' %}
-
-{% block title %}Sign Up{% endblock %}
 {% load crispy_forms_tags %}
 
+{% block title %}Sign Up{% endblock %}
+
 {% block content %}
-    <div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h1 class="text-3xl font-semibold mb-6 text-center">Sign Up</h1>
-        <form method="post" action="." class="space-y-6">
-            {% csrf_token %}
-            <div class="space-y-4">
-                {{ profile_form|crispy }}
+<div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <h1 class="text-3xl font-semibold mb-6 text-center">Sign Up</h1>
+    <form method="post" action="." class="space-y-6">
+        {% csrf_token %}
+        <div class="space-y-4">
+            <div class="mb-4">
+                <label for="id_name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                {{ profile_form.name }}
             </div>
-            <div class="space-y-4">
-                {{ form|crispy }}
+            <div class="mb-4">
+                <label for="id_contact" class="block text-gray-700 text-sm font-bold mb-2">Contact</label>
+                {{ profile_form.contact }}
             </div>
-            <div class="text-center">
-                <button class="py-3 px-7 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
-                    Submit
-                </button>
+            <div class="mb-4">
+                <label for="id_location" class="block text-gray-700 text-sm font-bold mb-2">Location</label>
+                {{ profile_form.location }}
             </div>
-        </form>
-    </div>
+            <div class="mb-4">
+                <label for="id_business_type" class="block text-gray-700 text-sm font-bold mb-2">Business Type</label>
+                {{ profile_form.business_type }}
+            </div>
+            <div class="mb-4" id="div_id_shop">
+                <label for="id_shop" class="block text-gray-700 text-sm font-bold mb-2">Shop</label>
+                {{ profile_form.shop }}
+            </div>
+        </div>
+        <div class="space-y-4">
+            {{ form|crispy }}
+        </div>
+        <div class="text-center">
+            <button type="submit" class="py-3 px-7 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const businessTypeField = document.getElementById('id_business_type');
+        const shopFieldDiv = document.getElementById('div_id_shop');
+        const shopInput = document.getElementById('id_shop');
+
+        function toggleShopField() {
+            if (businessTypeField.value === 'customer') {
+                shopFieldDiv.style.display = 'none';
+                shopInput.required = false;
+                shopInput.value = '';  // Clear the value if not required
+            } else {
+                shopFieldDiv.style.display = 'block';
+                shopInput.required = true;
+            }
+        }
+
+        // Initialize the visibility of the shop field
+        toggleShopField();
+
+        // Add event listener to the business type field
+        businessTypeField.addEventListener('change', toggleShopField);
+    });
+</script>
 {% endblock %}

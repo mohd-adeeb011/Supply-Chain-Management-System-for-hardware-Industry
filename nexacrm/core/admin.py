@@ -38,7 +38,7 @@ class ManufacturingPartAdmin(admin.ModelAdmin):
     
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'get_manufacturing_parts', 'total_items']
+    list_display = ['name', 'price', 'image']
 
     def get_manufacturing_parts(self, obj):
         return ", ".join([part.name for part in obj.parts.all()])
@@ -62,7 +62,7 @@ class PurchasedProductAdmin(admin.ModelAdmin):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['raw_material','quantity', 'status', 'created_at']
+    list_display = ['raw_material','user', 'quantity', 'status', 'created_at']
     list_filter = ['status']
     search_fields = ['raw_material__name']
 

@@ -91,3 +91,75 @@ def finalize_order_view(request, material_id):
 
 def PrintFunction(n):
     print(f"Hello {n}")
+
+
+
+##------------------------------------------------------------------------------------------>>>>>
+## Add to cart view.
+{% for material in materials_info %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_needed }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_available }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ material.quantity_to_order }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <form method="post" action="{% url 'add_to_cart_view' material.id material.quantity_to_order %}">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add to Cart</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def order_raw_materials_view(request):
+    if request.method == 'POST':
+        form = RawMaterialOrderForm(request.POST)
+        if form.is_valid():
+            product = form.cleaned_data['product']
+            raw_materials_needed = form.get_raw_material_fields()
+
+            materials_info = []
+
+            for raw_material_name, quantity_needed in raw_materials_needed:
+                raw_material_obj = RawMaterial.objects.filter(name__iexact=raw_material_name).first()
+                if raw_material_obj:
+                    total_available = Order.objects.filter(raw_material=raw_material_obj, status='complete').aggregate(total=Sum('quantity'))['total'] or 0
+                    needed_quantity = max(quantity_needed - total_available, 0)
+                    materials_info.append({
+                        'id': raw_material_obj.id,
+                        'name': raw_material_name,
+                        'quantity_needed': quantity_needed,
+                        'quantity_available': total_available,
+                        'quantity_to_order': needed_quantity
+                    })
+                    print("----------------------------------------------------################")
+                    print(materials_info[0]['id'])
+
+            context = {
+                'form': form,
+                'materials_info': materials_info
+            }
+            return render(request, 'core/order_raw_materials.html', context)
+    else:
+        form = RawMaterialOrderForm()
+
+    return render(request, 'core/order_raw_materials.html', {'form': form})
+
+
+@superuser_required
+@login_required
+def add_to_cart_view(request, material_id, quantity):
+    raw_material = get_object_or_404(RawMaterial, id=material_id)
+
+    if request.method == 'POST':
+        cart_item, created = CartItem.objects.get_or_create(user=request.user, raw_material=raw_material, defaults={'quantity': quantity})
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+        messages.success(request, f"{raw_material.name} has been added to your cart.")
+        return redirect('order_raw_materials')
+
+    return redirect('order_raw_materials')

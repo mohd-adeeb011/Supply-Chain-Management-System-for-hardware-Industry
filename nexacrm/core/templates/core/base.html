@@ -61,22 +61,28 @@
             <span class="navbar-text py-0 text-sm">Welcome, {{ request.user.username }}</span> 
             <div class="flex items-center space-x-4">
               {% if request.user.is_superuser %}
+                <!-- Superuser sees all links -->
                 <a href="{% url 'main_page' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Home</a>
                 <a href="{% url 'manufacturing_products' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Add Manufacturing Product</a>
-                <a href="{% url 'raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Raw Materials by Vendors</a>
-                <a href="{% url 'manufacturing_parts' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Manufacturing Parts</a>
-                <a href="{% url 'orders' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders</a>
                 <a href="{% url 'order_raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders Raw Materials</a>
+                <a href="{% url 'inventory' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Inventory</a>
+                <a href="{% url 'raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Raw Materials by Vendors</a>
                 <a href="{% url 'view_cart' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">View Cart</a>
                 <a href="{% url 'products' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Products</a>
+                <a href="{% url 'sold_products' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Sold Products</a>
+              {% elif user_profile.business_type == 'customer' %}
+                <!-- Customer sees limited links -->
+                <a href="{% url 'main_page' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Home</a>
+                <a href="{% url 'my_orders' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Orders</a>
+                <a href="{% url 'my_account' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Account</a>
               {% else %}
+                <!-- Vendor sees these links -->
                 <a href="{% url 'main_page' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Home</a>
                 <a href="{% url 'add_raw_material' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Add Raw Material</a>
                 <a href="{% url 'list_raw_materials' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Raw Materials</a>
-                <a href="{% url 'orders_recieved' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders Recieved</a>
+                <a href="{% url 'orders_recieved' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">Orders Received</a>
                 <a href="{% url 'my_orders' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Orders</a>
                 <a href="{% url 'my_account' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">My Account</a>
-                <a href="{% url 'view_cart' %}" class="py-1 px-5 navbar-button rounded-xl text-sm navbar-text hover:bg-gray-700">View Cart</a>
               {% endif %}
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}

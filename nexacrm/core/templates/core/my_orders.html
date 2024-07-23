@@ -11,14 +11,21 @@
             <ul>
                 {% for order in orders %}
                     <li class="border-b py-4">
-                        <p><strong>Product:</strong> {{ order.product.name }}</p>
-                        <p><strong>Quantity:</strong> {{ order.quantity }}</p>
-                        <p><strong>Purchase Date:</strong> {{ order.purchase_date }}</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-1">
+                                <p class="text-gray-700"><strong>Product:</strong> {{ order.product.name }}</p>
+                                <p class="text-gray-700"><strong>Quantity:</strong> {{ order.quantity }}</p>
+                            </div>
+                            <div class="col-span-1 text-right">
+                                <p class="text-gray-700"><strong>Price:</strong> Rs {{ order.price }}</p>
+                                <p class="text-gray-700"><strong>Purchase Date:</strong> {{ order.purchase_date|date:"M d, Y" }}</p>
+                            </div>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p class="text-center">You have not purchased any products yet.</p>
+            <p class="text-center text-gray-600">You have not purchased any products yet.</p>
         {% endif %}
     </div>
 </div>

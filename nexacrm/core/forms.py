@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import RawMaterial, Order, ManufacturingPart, Product, PurchasedProduct, Userprofile, ManufacturingProduct, CartItem
+from .models import RawMaterial, Order, ManufacturingPart, Product, PurchasedProduct, Userprofile, ManufacturingProduct, CartItem, ProductRawMaterial
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column
 
@@ -17,7 +17,7 @@ class UserProfileForm(forms.ModelForm):
 class RawMaterialForm(forms.ModelForm):
     class Meta:
         model = RawMaterial
-        fields = ['name', 'description', 'image', 'quantity']
+        fields = ['name', 'description', 'image', 'price', 'quantity']
 
 class OrderForm(forms.ModelForm):
     class Meta:
@@ -43,15 +43,18 @@ class ManufacturingPartForm(forms.ModelForm):
         
         self.fields['raw_materials'].queryset = self.raw_material_queryset
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['name', 'parts', 'image', 'total_items']
-
 class PurchaseForm(forms.ModelForm):
     class Meta:
         model = PurchasedProduct
         fields = ['product', 'quantity']
+
+    def __init__(self, *args, **kwargs):
+        product = kwargs.pop('product', None)
+        super(PurchaseForm, self).__init__(*args, **kwargs)
+        if product:
+            self.fields['product'].initial = product
+            self.fields['product'].widget = forms.HiddenInput()
+            self.fields['quantity'].widget.attrs.update({'min': 1, 'max': product.total_items})
 
 HARDCODED_RAW_MATERIALS = [
     'Round Pipe',
@@ -122,7 +125,7 @@ class RawMaterialOrderForm(forms.Form):
         product = self.cleaned_data.get('product')
         raw_material_fields = []
         if product:
-            for i in range(1, 6):
+            for i in range(0, 20):
                 raw_material = getattr(product, f'raw_material_{i}', None)
                 quantity = getattr(product, f'quantity_{i}', None)
                 if raw_material:
@@ -132,4 +135,16 @@ class RawMaterialOrderForm(forms.Form):
 class CartItemForm(forms.ModelForm):
     class Meta:
         model = CartItem
+        fields = ['raw_material', 'quantity']
+
+class ProductForm(forms.ModelForm):
+    manufacturing_product = forms.ModelChoiceField(queryset=ManufacturingProduct.objects.all(), label="Select Manufacturing Product")
+
+    class Meta:
+        model = Product
+        fields = ['name', 'image', 'total_items','price']
+
+class ProductRawMaterialForm(forms.ModelForm):
+    class Meta:
+        model = ProductRawMaterial
         fields = ['raw_material', 'quantity']

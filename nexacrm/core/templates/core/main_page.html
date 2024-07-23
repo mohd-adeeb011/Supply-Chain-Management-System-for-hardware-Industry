@@ -14,7 +14,12 @@
                 <p class="text-gray-700 text-base">Price: {{ product.price }}</p>
             </div>
             <div class="px-6 pt-4 pb-2 mb-2">
+                {% if product.total_items > 0 %}
                 <a href="{% url 'buy_product' product.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Buy Now</a>
+                {% else %}
+                <span class="bg-red-500 text-white font-bold py-2 px-4 rounded">Sold Out</span>
+                <button class="bg-gray-400 text-white font-bold py-2 px-4 rounded" disabled>Buy Now</button>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

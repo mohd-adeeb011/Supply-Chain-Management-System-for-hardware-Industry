@@ -1,25 +1,37 @@
 {% extends "core/base.html" %}
-
 {% block title %}Products{% endblock %}
-
 {% block content %}
-<h2>Products</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Manufacturing Parts</th>
-            <th>Total Items</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="max-w-7xl mx-auto mt-10">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Products</h2>
+        {% if user.is_superuser %}
+            <a href="{% url 'add_product' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Product</a>
+        {% endif %}
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for product in products %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.get_manufacturing_parts }}</td>
-            <td>{{ product.total_items }}</td>
-        </tr>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-32 object-cover mb-4 rounded">
+            <h3 class="text-xl font-bold mb-2">{{ product.name }}</h3>
+            <p class="text-gray-700 mb-2">Price: ${{ product.price }}</p>
+            <div class="space-y-2">
+                {% for pr in product.productrawmaterial_set.all %}
+                <div>
+                    <span class="font-semibold">{{ pr.raw_material.name }}:</span> {{ pr.quantity }}
+                </div>
+                {% endfor %}
+            </div>
+            {% if user.is_superuser %}
+            <div class="mt-4 flex justify-between">
+                <a href="{% url 'edit_product' product.id %}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Edit</a>
+                <form method="post" action="{% url 'delete_product' product.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
         {% endfor %}
-    </tbody>
-</table>
+    </div>
+</div>
 {% endblock %}
